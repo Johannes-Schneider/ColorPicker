@@ -75,8 +75,9 @@
             this.Controls.Add(this.SelectedColorDisplay);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "ColorPicker";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MainWindow";
+            this.Text = "ColorPicker";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.ResumeLayout(false);

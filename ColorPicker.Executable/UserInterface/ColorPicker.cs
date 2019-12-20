@@ -10,20 +10,7 @@ namespace ColorPicker.Executable.UserInterface
     {
         private static readonly Size SizeOneByOne = new Size(1, 1);
 
-
-        private IntPtr _magnificationControlHandle = IntPtr.Zero;
-
         private float _magnificationFactor = 1.0f;
-
-        public ColorPicker()
-        {
-            InitializeComponent();
-
-            MouseWheel += OnMouseWheel;
-            MouseDown += OnMouseDown;
-
-            Screenshot = Graphics.FromImage(SelectedPixel);
-        }
 
         public float MagnificationFactor
         {
@@ -41,7 +28,7 @@ namespace ColorPicker.Executable.UserInterface
 
                 Magnification.MagSetWindowTransform(_magnificationControlHandle,
                     new Magnification.MAGTRANSFORM
-                        {[0, 0] = MagnificationFactor, [1, 1] = MagnificationFactor, [2, 2] = 1.0f});
+                    { [0, 0] = MagnificationFactor, [1, 1] = MagnificationFactor, [2, 2] = 1.0f });
             }
         }
 
@@ -54,6 +41,19 @@ namespace ColorPicker.Executable.UserInterface
         private Bitmap SelectedPixel { get; } = new Bitmap(SizeOneByOne.Width, SizeOneByOne.Height);
 
         private Graphics Screenshot { get; }
+
+        private IntPtr _magnificationControlHandle = IntPtr.Zero;
+
+        public ColorPicker()
+        {
+            InitializeComponent();
+            Icon = Properties.Resources.ColorPickerIcon;
+
+            MouseWheel += OnMouseWheel;
+            MouseDown += OnMouseDown;
+
+            Screenshot = Graphics.FromImage(SelectedPixel);
+        }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
