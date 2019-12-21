@@ -7,6 +7,8 @@ Pick colors directly from your Desktop simply by clicking.
 ### Features
 
 * Copy selected color to clipboard (<code>#RRGGBB</code>)
+    * Confirm selection via mouse click or using the <kbd>Space</kbd> or <kbd>Enter</kbd> key
 * Magnify area around cursor
-* Mouse wheel to zoom-in and -out
+    * Mouse wheel to zoom-in and -out
+* Move cursor with pixel precision using the arrow keys (<kbd>←</kbd>, <kbd>→</kbd>, <kbd>↑</kbd>, and <kbd>↓</kbd>)
 * Application returns selected color
