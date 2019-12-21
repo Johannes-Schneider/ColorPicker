@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using ColorPicker.Executable.PInvoke;
 using ColorPicker.Executable.Properties;
@@ -57,8 +56,53 @@ namespace ColorPicker.Executable.UserInterface
 
             MouseWheel += OnMouseWheel;
             MouseDown += OnMouseDown;
+            PreviewKeyDown += OnPreviewKeyDown;
 
             Screenshot = Graphics.FromImage(SelectedPixel);
+        }
+
+        private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            var movement = new Point(0, 0);
+
+            switch (e.KeyCode)
+            {
+                case Keys.Left:
+                {
+                    movement.X = -1;
+                    break;
+                }
+                case Keys.Right:
+                {
+                    movement.X = 1;
+                    break;
+                }
+                case Keys.Up:
+                {
+                    movement.Y = -1;
+                    break;
+                }
+                case Keys.Down:
+                {
+                    movement.Y = 1;
+                    break;
+                }
+                case Keys.Space: // fallthrough
+                case Keys.Enter:
+                {
+                    // confirm selection
+                    IsRunning = false;
+                    Close();
+                    return;
+                }
+                default:
+                {
+                    return;
+                }
+            }
+
+            User32.GetCursorPos(out var cursorPosition);
+            User32.SetCursorPos(cursorPosition.X + movement.X, cursorPosition.Y + movement.Y);
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)

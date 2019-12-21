@@ -259,5 +259,9 @@ namespace ColorPicker.Executable.PInvoke
         [DllImport(nameof(User32))]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetCursorPos(out Win32.Point lpPoint);
+        
+        [DllImport(nameof(User32))]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetCursorPos(int x, int y);
     }
 }

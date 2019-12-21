@@ -35,9 +35,11 @@
             // 
             // MagnifierHost
             // 
-            this.MagnifierHost.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MagnifierHost.Anchor =
+                ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top |
+                                                         System.Windows.Forms.AnchorStyles.Bottom) |
+                                                        System.Windows.Forms.AnchorStyles.Left) |
+                                                       System.Windows.Forms.AnchorStyles.Right)));
             this.MagnifierHost.Location = new System.Drawing.Point(3, 3);
             this.MagnifierHost.Name = "MagnifierHost";
             this.MagnifierHost.Size = new System.Drawing.Size(128, 128);
@@ -45,9 +47,12 @@
             // 
             // SelectedColorLabel
             // 
-            this.SelectedColorLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SelectedColorLabel.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SelectedColorLabel.Anchor =
+                ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Bottom |
+                                                        System.Windows.Forms.AnchorStyles.Left) |
+                                                       System.Windows.Forms.AnchorStyles.Right)));
+            this.SelectedColorLabel.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Point, ((byte) (0)));
             this.SelectedColorLabel.Location = new System.Drawing.Point(1, 131);
             this.SelectedColorLabel.Margin = new System.Windows.Forms.Padding(0);
             this.SelectedColorLabel.Name = "SelectedColorLabel";
@@ -58,9 +63,11 @@
             // 
             // SelectedColorDisplay
             // 
-            this.SelectedColorDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SelectedColorDisplay.Anchor =
+                ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top |
+                                                         System.Windows.Forms.AnchorStyles.Bottom) |
+                                                        System.Windows.Forms.AnchorStyles.Left) |
+                                                       System.Windows.Forms.AnchorStyles.Right)));
             this.SelectedColorDisplay.Location = new System.Drawing.Point(1, 1);
             this.SelectedColorDisplay.Name = "SelectedColorDisplay";
             this.SelectedColorDisplay.Size = new System.Drawing.Size(132, 152);
@@ -81,7 +88,6 @@
             this.TopMost = true;
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.ResumeLayout(false);
-
         }
 
         #endregion
