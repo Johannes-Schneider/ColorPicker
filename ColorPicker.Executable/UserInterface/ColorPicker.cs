@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
+using System.IO;
 using System.Windows.Forms;
-using PInvoke;
+using ColorPicker.Executable.PInvoke;
+using ColorPicker.Executable.Properties;
 
 namespace ColorPicker.Executable.UserInterface
 {
     public partial class ColorPicker : Form
     {
         private static readonly Size SizeOneByOne = new Size(1, 1);
+
+        private static readonly float MinMagnificationFactor = 1.0f;
+        private static readonly float MaxMagnificationFactor = 10.0f;
 
         private float _magnificationFactor = 1.0f;
 
@@ -22,13 +26,15 @@ namespace ColorPicker.Executable.UserInterface
                     return;
                 }
 
-                _magnificationFactor = Math.Max(1.0f, value);
+                _magnificationFactor = Math.Max(MinMagnificationFactor, Math.Min(MaxMagnificationFactor, value));
 
-                if (!IsRunning) return;
+                if (!IsRunning)
+                {
+                    return;
+                }
 
-                Magnification.MagSetWindowTransform(_magnificationControlHandle,
-                    new Magnification.MAGTRANSFORM
-                    { [0, 0] = MagnificationFactor, [1, 1] = MagnificationFactor, [2, 2] = 1.0f });
+                var transform = Magnification.Transform.Magnify(MagnificationFactor);
+                Magnification.MagSetWindowTransform(_magnificationControlHandle, ref transform);
             }
         }
 
@@ -47,7 +53,7 @@ namespace ColorPicker.Executable.UserInterface
         public ColorPicker()
         {
             InitializeComponent();
-            Icon = Properties.Resources.ColorPickerIcon;
+            Icon = Resources.ColorPickerIcon;
 
             MouseWheel += OnMouseWheel;
             MouseDown += OnMouseDown;
@@ -75,6 +81,8 @@ namespace ColorPicker.Executable.UserInterface
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
+            MagnifierHost.Cursor = Cursors.Cross;
+
             IsRunning = Magnification.MagInitialize();
 
             _magnificationControlHandle = CreateMagnificationControl();
@@ -94,13 +102,13 @@ namespace ColorPicker.Executable.UserInterface
                 "Magnifier",
                 string.Empty,
                 User32.WindowStyles.WS_CHILD | User32.WindowStyles.WS_VISIBLE,
-                clientRect.left,
-                clientRect.top,
-                clientRect.right - clientRect.left,
-                clientRect.bottom - clientRect.top,
+                clientRect.Left,
+                clientRect.Top,
+                clientRect.Right - clientRect.Left,
+                clientRect.Bottom - clientRect.Top,
                 MagnifierHost.Handle,
                 IntPtr.Zero,
-                applicationHandle.DangerousGetHandle(),
+                applicationHandle,
                 IntPtr.Zero);
         }
 
@@ -111,9 +119,9 @@ namespace ColorPicker.Executable.UserInterface
                 return;
             }
 
-            var cursorPosition = User32.GetCursorPos();
-            var locationX = cursorPosition.x - Width / 2;
-            var locationY = cursorPosition.y - Height / 2;
+            User32.GetCursorPos(out var cursorPosition);
+            var locationX = cursorPosition.X - Width / 2;
+            var locationY = cursorPosition.Y - Height / 2;
 
             locationX = Math.Max(SystemInformation.VirtualScreen.Left,
                 Math.Min(SystemInformation.VirtualScreen.Right - Width, locationX));
@@ -124,20 +132,19 @@ namespace ColorPicker.Executable.UserInterface
 
             var sourceWidth = (int) (MagnifierHost.Size.Width / MagnificationFactor);
             var sourceHeight = (int) (MagnifierHost.Size.Height / MagnificationFactor);
-            var sourceLeft = cursorPosition.x - sourceWidth / 2;
-            var sourceTop = cursorPosition.y - sourceHeight / 2;
+            var sourceLeft = cursorPosition.X - sourceWidth / 2;
+            var sourceTop = cursorPosition.Y - sourceHeight / 2;
 
-            var magnificationSourceRectangle = new RECT
-            {
-                left = sourceLeft,
-                top = sourceTop,
-                right = sourceLeft + sourceWidth,
-                bottom = sourceTop + sourceHeight
-            };
+            var magnificationSourceRectangle = new Win32.Rectangle(
+                sourceLeft,
+                sourceTop,
+                sourceLeft + sourceWidth,
+                sourceTop + sourceHeight
+            );
 
-            MagSetWindowSource(_magnificationControlHandle, magnificationSourceRectangle);
+            Magnification.MagSetWindowSource(_magnificationControlHandle, magnificationSourceRectangle);
 
-            Screenshot.CopyFromScreen(cursorPosition.x, cursorPosition.y, 0, 0, SizeOneByOne);
+            Screenshot.CopyFromScreen(cursorPosition.X, cursorPosition.Y, 0, 0, SizeOneByOne);
             SelectedColor = SelectedPixel.GetPixel(0, 0);
 
             SelectedColorDisplay.BackColor = SelectedColor;
@@ -153,10 +160,6 @@ namespace ColorPicker.Executable.UserInterface
             BackColor = contrastColor;
             SelectedColorLabel.ForeColor = contrastColor;
         }
-
-        [DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool MagSetWindowSource(IntPtr hWnd, RECT rect);
 
         protected override void WndProc(ref Message m)
         {
